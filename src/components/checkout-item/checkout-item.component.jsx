@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useCallback } from 'react';
 
 import { CartContext } from '../../contexts/cart.context';
 
@@ -18,9 +18,9 @@ const CheckoutItem = ({ cartItem }) => {
   const { clearItemFromCart, addItemToCart, removeItemToCart } =
     useContext(CartContext);
 
-  const clearItemHandler = () => clearItemFromCart(cartItem);
-  const addItemHandler = () => addItemToCart(cartItem);
-  const removeItemHandler = () => removeItemToCart(cartItem);
+  const clearItemHandler = useCallback(() => clearItemFromCart(cartItem), [cartItem, clearItemFromCart]);
+  const addItemHandler = useCallback(() => addItemToCart(cartItem), [cartItem, addItemToCart]);
+  const removeItemHandler = useCallback(() => removeItemToCart(cartItem), [cartItem, removeItemToCart]);
 
   return (
     <CheckoutItemContainer>
