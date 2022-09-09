@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useCallback } from 'react';
 
 import { CartContext } from '../../contexts/cart.context';
 
@@ -15,7 +15,7 @@ const ProductCard = ({ product }) => {
   const { name, price, imageUrl } = product;
   const { addItemToCart } = useContext(CartContext);
 
-  const addProductToCart = () => addItemToCart(product);
+  const addProductToCart = useCallback(() => addItemToCart(product), [product,addItemToCart]);
 
   return (
     <ProductCartContainer>
