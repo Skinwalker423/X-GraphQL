@@ -15,6 +15,8 @@ const COLLECTIONS = gql`
     items{
       id
       name
+      price
+      imageUrl
     }
   }
 }
@@ -27,19 +29,21 @@ export const CategoriesProvider = ({ children }) => {
 
   const {data, loading, error} = useQuery(COLLECTIONS);
 
-  console.log(loading);
-  console.log(data);
   
-  // useEffect(() => {
-  //   const getCategoriesMap = async () => {
-  //     const categoryMap = await getCategoriesAndDocuments();
-  //     setCategoriesMap(categoryMap);
-  //   };
+  useEffect(() => {
+    if(data){
+      const { collections } = data;
+      const collectionsMap = collections.reduce((acc, collection) => {
+          const {title, items} = collection;
+          acc[title.toLowerCase()] = items;
+          return acc;
+      }, {})
 
-  //   getCategoriesMap();
-  // }, []);
+      setCategoriesMap(collectionsMap);
+    }
+  }, [data]);
 
-  const value = { categoriesMap };
+  const value = { categoriesMap, loading };
   return (
     <CategoriesContext.Provider value={value}>
       {children}
