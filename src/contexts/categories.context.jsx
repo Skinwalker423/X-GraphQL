@@ -1,8 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 
-import { getCategoriesAndDocuments } from '../utils/firebase/firebase.utils';
-
 export const CategoriesContext = createContext({
   categoriesMap: {},
 });
@@ -27,7 +25,7 @@ const COLLECTIONS = gql`
 export const CategoriesProvider = ({ children }) => {
   const [categoriesMap, setCategoriesMap] = useState({});
 
-  const {data, loading, error} = useQuery(COLLECTIONS);
+  const {data, loading} = useQuery(COLLECTIONS);
 
   
   useEffect(() => {
