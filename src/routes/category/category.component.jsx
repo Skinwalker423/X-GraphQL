@@ -1,20 +1,49 @@
-import { useContext, useState, useEffect, Fragment } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
+import { gql, useQuery } from '@apollo/client';
+import Spinner from '../../components/spinner/spinner.component';
 
 import ProductCard from '../../components/product-card/product-card.component';
 
-import { CategoriesContext } from '../../contexts/categories.context';
 
 import { CategoryContainer, Title } from './category.styles';
 
+const GET_COLLECTIONS_BY_TITLE = gql`
+  query($title:String!) {
+  getCollectionsByTitle(title: $title){
+    id
+    title
+    items{
+      id
+      name
+      price
+      imageUrl
+    }
+  }
+}
+`
+
 const Category = () => {
   const { category } = useParams();
-  const { categoriesMap } = useContext(CategoriesContext);
-  const [products, setProducts] = useState(categoriesMap[category]);
+  const [products, setProducts] = useState([]);
+  const {data, loading} = useQuery(GET_COLLECTIONS_BY_TITLE, {variables: {title: category}});
+
+
+  console.log(data);
+
 
   useEffect(() => {
-    setProducts(categoriesMap[category]);
-  }, [category, categoriesMap]);
+    if(data){
+      const {items} = data.getCollectionsByTitle;
+      setProducts(items); 
+    }
+    
+  }, [category, data]);
+
+  if(loading){
+    console.log('spinner activated');
+    return <Spinner />
+  }
 
   return (
     <Fragment>
